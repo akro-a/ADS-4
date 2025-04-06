@@ -1,5 +1,4 @@
 // Copyright 2021 NNTU-CS
-```cpp
 #include <algorithm>
 
 int countPairs1(int* arr, int len, int value) {
@@ -69,4 +68,4 @@ int countPairs3(int* arr, int len, int value) {
   }
   return pair_count;
 }
-```
+
