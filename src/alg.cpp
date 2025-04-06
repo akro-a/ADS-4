@@ -14,10 +14,29 @@ int countPairs1(int* arr, int len, int value) {
   return result;
 }
 
+static int countOccurrences(const int* arr, int left, int right, int key) {
+  const int* lb = std::lower_bound(arr + left, arr + right + 1, key);
+  const int* ub = std::upper_bound(arr + left, arr + right + 1, key);
+  return static_cast<int>(ub - lb);
+}
+
 int countPairs2(int* arr, int len, int value) {
+  int result = 0;
+  for (int i = 0; i < len; ++i) {
+    int need = value - arr[i];
+    if (need < 0) {
+      continue;
+    }
+    result += countOccurrences(arr, i + 1, len - 1, need);
+  }
+  return result;
+}
+
+int countPairs3(int* arr, int len, int value) {
   int result = 0;
   int left = 0;
   int right = len - 1;
+
   while (left < right) {
     int64_t s = static_cast<int64_t>(arr[left]) +
                 static_cast<int64_t>(arr[right]);
@@ -49,20 +68,3 @@ int countPairs2(int* arr, int len, int value) {
   return result;
 }
 
-static int countOccurrences(const int* arr, int left, int right, int key) {
-  const int* lb = std::lower_bound(arr + left, arr + right + 1, key);
-  const int* ub = std::upper_bound(arr + left, arr + right + 1, key);
-  return static_cast<int>(ub - lb);
-}
-
-int countPairs3(int* arr, int len, int value) {
-  int result = 0;
-  for (int i = 0; i < len; ++i) {
-    int need = value - arr[i];
-    if (need < 0) {
-      continue;
-    }
-    result += countOccurrences(arr, i + 1, len - 1, need);
-  }
-  return result;
-}
