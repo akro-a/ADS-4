@@ -1,71 +1,68 @@
 // Copyright 2021 NNTU-CS
 #include <algorithm>
+#include <cstdint>
 
 int countPairs1(int* arr, int len, int value) {
-  int pair_count = 0;
+  int result = 0;
   for (int i = 0; i < len; ++i) {
     for (int j = i + 1; j < len; ++j) {
       if (arr[i] + arr[j] == value) {
-        ++pair_count;
+        ++result;
       }
     }
   }
-  return pair_count;
+  return result;
 }
 
 int countPairs2(int* arr, int len, int value) {
-  int pair_count = 0;
+  int result = 0;
   int left = 0;
   int right = len - 1;
-
   while (left < right) {
-    long long current_sum = static_cast<long long>(arr[left]) +
-                            static_cast<long long>(arr[right]);
-
-    if (current_sum == value) {
-      int left_val = arr[left];
-      int right_val = arr[right];
-      if (left_val == right_val) {
-        long long n = right - left + 1;
-        pair_count += static_cast<int>((n * (n - 1)) / 2);
+    int64_t s = static_cast<int64_t>(arr[left]) +
+                static_cast<int64_t>(arr[right]);
+    if (s == value) {
+      int lv = arr[left];
+      int rv = arr[right];
+      if (lv == rv) {
+        int64_t n = static_cast<int64_t>(right - left + 1);
+        result += static_cast<int>((n * (n - 1)) / 2);
         break;
       }
-      int left_count = 0;
-      while (left < right && arr[left] == left_val) {
-        ++left_count;
+      int lc = 0;
+      while (left < right && arr[left] == lv) {
+        ++lc;
         ++left;
       }
-      int right_count = 0;
-      while (right >= left && arr[right] == right_val) {
-        ++right_count;
+      int rc = 0;
+      while (right >= left && arr[right] == rv) {
+        ++rc;
         --right;
       }
-      pair_count += left_count * right_count;
-    } else if (current_sum < value) {
+      result += lc * rc;
+    } else if (s < value) {
       ++left;
     } else {
       --right;
     }
   }
-  return pair_count;
+  return result;
 }
 
-static int countOccurrences(int* arr, int left, int right, int key) {
-  int* lb = std::lower_bound(arr + left, arr + right + 1, key);
-  int* ub = std::upper_bound(arr + left, arr + right + 1, key);
+static int countOccurrences(const int* arr, int left, int right, int key) {
+  const int* lb = std::lower_bound(arr + left, arr + right + 1, key);
+  const int* ub = std::upper_bound(arr + left, arr + right + 1, key);
   return static_cast<int>(ub - lb);
 }
 
 int countPairs3(int* arr, int len, int value) {
-  int pair_count = 0;
+  int result = 0;
   for (int i = 0; i < len; ++i) {
     int need = value - arr[i];
     if (need < 0) {
       continue;
     }
-    int occurrences = countOccurrences(arr, i + 1, len - 1, need);
-    pair_count += occurrences;
+    result += countOccurrences(arr, i + 1, len - 1, need);
   }
-  return pair_count;
+  return result;
 }
-
